@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   // Otimizado para deploy em Railway (standalone output)
   output: "standalone",
 
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
+  },
+
   images: {
     remotePatterns: [
       {
@@ -17,6 +23,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
       },
     ],
   },

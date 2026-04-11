@@ -1,13 +1,12 @@
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import crypto from "crypto";
-import { existsSync } from "fs";
+import { prisma } from "@/lib/prisma";
 
 /**
- * Saves a File object to the public/uploads directory.
+ * Saves a File's binary data to the Image table in PostgreSQL.
+ * Returns a URL path that serves the image via an API route.
+ *
  * @param file The File object from FormData
- * @param folder Subfolder inside public/uploads (e.g. 'projects')
- * @returns The public URL path (e.g. '/uploads/projects/filename.jpg') or null if invalid
+ * @param folder Kept for backwards compatibility (unused)
+ * @returns The URL path (e.g. '/api/images/cuid123') or null if invalid
  */
 export async function uploadFile(file: File | null, folder: string = ""): Promise<string | null> {
   if (!file || file.size === 0 || file.name === "undefined") {
@@ -17,28 +16,20 @@ export async function uploadFile(file: File | null, folder: string = ""): Promis
   try {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const mimeType = file.type || "image/jpeg";
 
-    // Create unique filename
-    const uuid = crypto.randomUUID().slice(0, 8);
-    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_").split(".")[0];
-    const newFilename = `${sanitizedName}_${uuid}.${extension}`;
+    // Save binary data to the database
+    const image = await prisma.image.create({
+      data: {
+        data: buffer,
+        mimeType,
+      },
+    });
 
-    // Ensure directory exists
-    const uploadDir = join(process.cwd(), "public", "uploads", folder);
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
-
-    // Write file
-    const filePath = join(uploadDir, newFilename);
-    await writeFile(filePath, buffer);
-
-    // Return public URL
-    const publicPath = folder ? `/uploads/${folder}/${newFilename}` : `/uploads/${newFilename}`;
-    return publicPath;
+    // Return a URL that the API route will serve
+    return `/api/images/${image.id}`;
   } catch (error) {
-    console.error("Error uploading file:", error);
+    console.error("Error uploading file to database:", error);
     return null;
   }
 }

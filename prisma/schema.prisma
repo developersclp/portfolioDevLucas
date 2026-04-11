@@ -93,3 +93,10 @@ model Language {
   order     Int      @default(0)
   createdAt DateTime @default(now())
 }
+
+model Image {
+  id        String   @id @default(cuid())
+  data      Bytes
+  mimeType  String
+  createdAt DateTime @default(now())
+}
