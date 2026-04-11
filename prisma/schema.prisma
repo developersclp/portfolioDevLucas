@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id             String          @id @default(cuid())
+  name           String          @unique
+  createdAt      DateTime        @default(now())
+  projects       Project[]
+  certifications Certification[]
+}
+
+model Project {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  longDescription String @default("")
+  technologies String[]
+  imageUrl     String
+  githubUrl    String
+  demoUrl      String?
+  featured     Boolean  @default(false)
+  date         String   @default("")
+  categoryId   String
+  category     Category @relation(fields: [categoryId], references: [id])
+  createdAt    DateTime @default(now())
+}
+
+model Certification {
+  id            String   @id @default(cuid())
+  name          String
+  institution   String
+  date          String
+  credentialId  String?
+  credentialUrl String?
+  imageUrl      String
+  technologies  String[]
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id])
+  createdAt     DateTime @default(now())
+}
+
+model Profile {
+  id        String   @id @default(cuid())
+  name      String   @default("")
+  title     String   @default("")
+  summary   String   @default("")
+  email     String   @default("")
+  phone     String   @default("")
+  location  String   @default("")
+  linkedin  String   @default("")
+  github    String   @default("")
+  website   String   @default("")
+  skills    String[]
+  updatedAt DateTime @updatedAt
+}
+
+model Experience {
+  id          String   @id @default(cuid())
+  role        String
+  company     String
+  period      String
+  description String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Education {
+  id          String   @id @default(cuid())
+  degree      String
+  institution String
+  period      String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Language {
+  id        String   @id @default(cuid())
+  name      String
+  level     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
