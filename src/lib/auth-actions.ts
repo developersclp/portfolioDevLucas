@@ -20,18 +20,32 @@ export async function login(
   }
 
   // Find user in database
-  const user = await prisma.adminUser.findUnique({
+  let user = await prisma.adminUser.findUnique({
     where: { email },
   });
 
   if (!user) {
-    return { error: "Credenciais inválidas." };
-  }
+    // Self-healing: Create admin if it doesn't exist but credentials match .env
+    const envEmail = process.env.ADMIN_EMAIL;
+    const envPassword = process.env.ADMIN_PASSWORD;
 
-  // Verify password
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) {
-    return { error: "Credenciais inválidas." };
+    if (envEmail && envPassword && email === envEmail && password === envPassword) {
+      const hashedPassword = await bcrypt.hash(password, 12);
+      user = await prisma.adminUser.create({
+        data: {
+          email,
+          password: hashedPassword,
+        },
+      });
+    } else {
+      return { error: "Credenciais inválidas." };
+    }
+  } else {
+    // Verify password for existing user
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      return { error: "Credenciais inválidas." };
+    }
   }
 
   // Create session and redirect
