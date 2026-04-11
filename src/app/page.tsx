@@ -8,6 +8,9 @@ import { ContactSection } from "@/components/sections/contact-section";
 import { Footer } from "@/components/sections/footer";
 import { generateResume } from "@/lib/generate-resume";
 
+// Force dynamic rendering — DB is not available during Railway build phase
+export const dynamic = "force-dynamic";
+
 /**
  * Home Page - Server Component that fetches data from DB
  * and passes it as props to client components
