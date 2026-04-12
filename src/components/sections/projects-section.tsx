@@ -34,7 +34,7 @@ export function ProjectsSection({
         <SectionHeader
           label="Portfólio"
           title="Meus Projetos"
-          description="Uma seleção dos projetos mais relevantes que construí, desde aplicações full-stack até ferramentas de IA."
+          description="Uma seleção dos projetos mais relevantes que construí."
         />
 
         <FilterBar
