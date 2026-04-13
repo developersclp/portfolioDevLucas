@@ -90,12 +90,12 @@ export function ResumeSection({ resumeData }: { resumeData: ResumeData }) {
 
       // Helper: linha separadora
       const drawSeparator = () => {
-        checkPage(8);
-        y += 4;
+        checkPage(20);
+        y += 8;
         pdf.setDrawColor(...lineColor);
         pdf.setLineWidth(0.3);
         pdf.line(margin, y, pageWidth - margin, y);
-        y += 4;
+        y += 10;
       };
 
       // Helper: título de seção
@@ -298,10 +298,20 @@ export function ResumeSection({ resumeData }: { resumeData: ResumeData }) {
       }
 
       const fileName = `curriculo-${resumeData.profile.name.toLowerCase().replace(/\s+/g, "-")}.pdf`;
-      pdf.save(fileName);
-    } catch (error) {
+
+      // Alternativa robusta de download do blob no React Client + Next.js App Router
+      const blob = pdf.output("blob");
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error: any) {
       console.error("Error exporting PDF:", error);
-      alert("Houve um erro ao gerar o PDF. Verifique o console.");
+      alert("Houve um erro ao gerar o PDF: " + (error?.message || String(error)));
     } finally {
       setIsExporting(false);
     }
