@@ -67,7 +67,7 @@ export function ContactSection({ profile }: { profile?: { email: string; locatio
                 </div>
                 <div>
                   <p className="text-xs text-zinc-500 mb-0.5">LinkedIn</p>
-                  <p className="text-sm font-medium text-white">LinkedIn Profil</p>
+                  <p className="text-sm font-medium text-white">LinkedIn Profile</p>
                 </div>
               </a>
 
@@ -82,7 +82,7 @@ export function ContactSection({ profile }: { profile?: { email: string; locatio
                 </div>
                 <div>
                   <p className="text-xs text-zinc-500 mb-0.5">GitHub</p>
-                  <p className="text-sm font-medium text-white">GitHub Profil</p>
+                  <p className="text-sm font-medium text-white">GitHub Profile</p>
                 </div>
               </a>
 
