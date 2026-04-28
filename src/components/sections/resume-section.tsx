@@ -45,12 +45,12 @@ export function ResumeSection({ resumeData }: { resumeData: ResumeData }) {
       let y = margin;
 
       // Cores
-      const darkBg: [number, number, number] = [24, 24, 27]; // zinc-900
-      const emerald: [number, number, number] = [52, 211, 153]; // emerald-400
-      const white: [number, number, number] = [255, 255, 255];
-      const gray: [number, number, number] = [161, 161, 170]; // zinc-400
+      const darkBg: [number, number, number] = [255, 255, 255]; // Fundo branco
+      const emerald: [number, number, number] = [16, 185, 129]; // emerald-500
+      const white: [number, number, number] = [24, 24, 27]; // Texto escuro (zinc-900)
+      const gray: [number, number, number] = [82, 82, 91]; // zinc-600
       const darkGray: [number, number, number] = [113, 113, 122]; // zinc-500
-      const lineColor: [number, number, number] = [39, 39, 42]; // zinc-800
+      const lineColor: [number, number, number] = [228, 228, 231]; // zinc-200
 
       // Fundo escuro
       pdf.setFillColor(...darkBg);
